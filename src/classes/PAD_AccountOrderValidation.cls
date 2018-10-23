@@ -23,8 +23,8 @@ public class PAD_AccountOrderValidation implements XAP_TRIG_TriggerEventHandlerI
 				'DEAD'
 			)); 
 			
-		Map<Id, Integer> invoicedCountByAccountIdMap = this.orderSelector.countNotInvoicedForAccounts(newDeadAccountByIdMap.keySet());
-		for (Id accountId : invoicedCountByAccountIdMap.keySet()) {
+		Map<Id, Integer> uninvoiceCountByAccountIdMap = this.orderSelector.countNotInvoicedForAccounts(newDeadAccountByIdMap.keySet());
+		for (Id accountId : uninvoiceCountByAccountIdMap.keySet()) {
 			// We don't need to check for 0 count because these are filtered by the query.
 			newDeadAccountByIdMap.get(accountId).addError(errorMessage);
 		}

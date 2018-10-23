@@ -17,20 +17,20 @@ public virtual class DAO_OrderSelector {
 	// returning AggregateResults presents a problem since we can't construct these. 
 	public virtual Map<Id, Integer> countNotInvoicedForAccounts(Set<Id> accountIdSet) {
 		List<AggregateResult> aggregateResultList = [
-			SELECT AccountId, COUNT(Id) invoicedCount
+			SELECT AccountId, COUNT(Id) uninvoicedCount
 			FROM Order
 			WHERE Status != :INVOICED
 				AND AccountId IN :accountIdSet
 			GROUP BY AccountId
 		];
 		
-		Map<Id, Integer> invoiceCountByAccountIdMap = new Map<Id, Integer>();
+		Map<Id, Integer> uninvoiceCountByAccountIdMap = new Map<Id, Integer>();
 		for (AggregateResult aggregateResult : aggregateResultList) {
-			invoiceCountByAccountIdMap.put(
+			uninvoiceCountByAccountIdMap.put(
 				(Id) aggregateResult.get('AccountId'), 
-				(Integer) aggregateResult.get('invoicedCount')
+				(Integer) aggregateResult.get('uninvoicedCount')
 			);
 		}
-		return invoiceCountByAccountIdMap;
+		return uninvoiceCountByAccountIdMap;
 	}
 }

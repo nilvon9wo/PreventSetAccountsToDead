@@ -16,6 +16,10 @@ public virtual class DAO_OrderSelector {
 	// Also, if you want to create true/proper/atomic unit tests,
 	// returning AggregateResults presents a problem since we can't construct these. 
 	public virtual Set<Id> findNotInvoicedAccountIdSet(Set<Id> accountIdSet) {
+		if (accountIdSet.isEmpty()) {
+			return accountIdSet;
+		}
+		
 		List<AggregateResult> aggregateResultList = [
 			SELECT AccountId
 			FROM Order

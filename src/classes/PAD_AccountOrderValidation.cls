@@ -19,15 +19,14 @@ public class PAD_AccountOrderValidation implements XAP_TRIG_TriggerEventHandlerI
 			.extractWhereChangedToValueFrom(
 				triggerWrapper.newSObjectList, 
 				triggerWrapper.oldSObjectByIdMap, 
-				Account.Dead_Live__c, 
+				Account.Dead_Live__c,  
 				'DEAD'
 			)); 
-		Map<Id, Integer> invoicedCountByAccountIdMap = this.orderSelector.countInvoicedForAccounts(newDeadAccountByIdMap.keySet());
+			
+		Map<Id, Integer> invoicedCountByAccountIdMap = this.orderSelector.countNotInvoicedForAccounts(newDeadAccountByIdMap.keySet());
 		for (Id accountId : invoicedCountByAccountIdMap.keySet()) {
-			Integer invoicedCount = invoicedCountByAccountIdMap.get(accountId);
-			if (invoicedCount > 0) {
-				newDeadAccountByIdMap.get(accountId).addError(errorMessage);
-			}
+			// We don't need to check for 0 count because these are filtered by the query.
+			newDeadAccountByIdMap.get(accountId).addError(errorMessage);
 		}
 		return this;
 	} 

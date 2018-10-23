@@ -15,22 +15,19 @@ public virtual class DAO_OrderSelector {
 	// This returns a map so we can have a friendlier API.
 	// Also, if you want to create true/proper/atomic unit tests,
 	// returning AggregateResults presents a problem since we can't construct these. 
-	public virtual Map<Id, Integer> countNotInvoicedForAccounts(Set<Id> accountIdSet) {
+	public virtual Set<Id> findNotInvoicedAccountIdSet(Set<Id> accountIdSet) {
 		List<AggregateResult> aggregateResultList = [
-			SELECT AccountId, COUNT(Id) uninvoicedCount
+			SELECT AccountId
 			FROM Order
-			WHERE Status != :INVOICED
+			WHERE Status != :INVOICED 
 				AND AccountId IN :accountIdSet
 			GROUP BY AccountId
 		];
 		
-		Map<Id, Integer> uninvoiceCountByAccountIdMap = new Map<Id, Integer>();
+		Set<Id> uninvoicedAccountIdSet = new Set<Id>();
 		for (AggregateResult aggregateResult : aggregateResultList) {
-			uninvoiceCountByAccountIdMap.put(
-				(Id) aggregateResult.get('AccountId'), 
-				(Integer) aggregateResult.get('uninvoicedCount')
-			);
+			uninvoicedAccountIdSet.add((Id) aggregateResult.get('AccountId'));
 		}
-		return uninvoiceCountByAccountIdMap;
+		return uninvoicedAccountIdSet;
 	}
 }
